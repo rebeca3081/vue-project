@@ -2,12 +2,31 @@
   <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
-    <router-link to="/board">게시판</router-link>
+    <router-link to="/board">게시판</router-link> |
+    <router-link to="/todo">Todo</router-link>
   </nav>
   <router-view/>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      rootData: 'hello'
+    }
+  },
+  provide() {
+    return {
+      rootList: 'hello, have a good',
+      rootStr: 'World',
+      rootStr2: '반갑소'
+    }
+  }
+}
+</script>
+
 <style>
+@import url(../src/assets/style.css);
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

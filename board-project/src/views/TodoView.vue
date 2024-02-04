@@ -1,6 +1,7 @@
 <template>
   <HeadComponent @add-content="addContent"/>
-  <BodyComponent v-bind:list="todoList" @check-in="changCheck"/>
+  <BodyComponent v-bind:list="todoList" @change-class="changCheck"
+                                        @delete-todo="deleteTodo"/>
 </template>
 
 <script>
@@ -24,18 +25,33 @@ export default {
     }
   },
   methods: {
-    changCheck() {
-
-    },
-    addContent(todo) {
+    addContent(todo) { // todo 추가
       // console.log(todo);
       let idx = this.todoList.length - 1; // 마지막 인덱스 값
       let no = parseInt(this.todoList[idx].no) + 1; // 기존 배열 마지막 no 값
-      let newTodo = {no, todo}; // 새로운 객체 생성 {새번호, 새목록}
+      let newFlag = false;
+      let newTodo = {no, todo, newFlag}; // 새로운 객체 생성 {새번호, 새목록}
       // console.log(todo);
       this.todoList.splice(this.todoList.length, 0, newTodo);
       // console.log(this.todoList)
+    },
+    changCheck(no) { // 취소 class변경
+      for(let i = 0; i < this.todoList.length; i++) {
+        let thisTodo = this.todoList[i];
+        if(thisTodo.no == no) {
+          thisTodo.cancleFlag = !thisTodo.cancleFlag;
+          break;
+        }
+      }
+    },
+    deleteTodo(no) { // todo 삭제
+      for(let i = 0; i < this.todoList.length; i++) {
+        if(this.todoList[i].no == no) {
+          this.todoList.splice(i, 1);
+        }
+      }
     }
+
   }
 }
 </script>

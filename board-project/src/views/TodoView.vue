@@ -57,7 +57,7 @@ export default {
 </script>
 
 <!-- TodoView.vue에서만 적용되는 style -->
-<style>
+<style scoped>
 body {
   margin: 0;
   min-width: 250px;

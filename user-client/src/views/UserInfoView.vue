@@ -94,8 +94,8 @@ export default {
     },
     goToUpdate(userId) { 
       // 수정폼 컨포넌트 호출
-      // this.$router.push({ path: '/userUpdate', query: { userId }}); 
-      this.$router.push({ path: '/userForm', query: { "id" :userId }}); 
+      // this.$router.push({ path: '/userUpdate', query: { userId }});
+      this.$router.push({ path: '/userForm', query: { "id" :userId }});
       // query: { userId } : 변수명 == 필드명, 변수가 가지고 있는 값이 필드의 값
     },
     deleteInfo(userId) { 
@@ -104,7 +104,7 @@ export default {
       let newPath = `/api/users/${userId}`;
       axios.delete(newPath)
             .then(result => {
-              if(result.data.affectedRows != 0 && result.data.changedRows == 0) {
+              if(result.data.affectedRows != 0) {
                 alert('삭제 완료되었습니다.');
                 this.$router.push({ path: '/' }); // 다시 전체목록으로 돌아가기 or 페이지를 새로 그려주기
               } else {

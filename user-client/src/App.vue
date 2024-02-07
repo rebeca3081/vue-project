@@ -1,7 +1,8 @@
 <template>
   <div>
     <Header />
-    <router-view to="userList"/>
+    <router-view :key="$route.fullPath" />
+    <!-- "/userForm?id=user01" -->
   </div>
 </template>
 

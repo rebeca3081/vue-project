@@ -7,25 +7,25 @@
         <tr>
           <th>No.</th>
           <td>
-            <input type="number" v-model="userInfo.user_no" readonly>
+            <input type="number" class="form-control" v-model="userInfo.user_no" readonly>
           </td>
         </tr>
         <tr>
           <th>아이디</th>
           <td>
-            <input type="text" v-model="userInfo.user_id">
+            <input type="text" class="form-control" v-model="userInfo.user_id" readonly>
           </td>
         </tr>
         <tr>
           <th>비밀번호</th>
           <td>
-            <input type="password" v-model="userInfo.user_pwd">
+            <input type="password" class="form-control" v-model="userInfo.user_pwd">
           </td>
         </tr>
         <tr>
           <th>이름</th>
           <td>
-            <input type="text" v-model="userInfo.user_name">
+            <input type="text" class="form-control" v-model="userInfo.user_name">
           </td>
         </tr>
         <tr>
@@ -38,13 +38,13 @@
         <tr>
           <th>나이</th>
           <td>
-            <input type="number" v-model="userInfo.user_age" min="0" max="150">
+            <input type="number" class="form-control" v-model="userInfo.user_age" min="0" max="150">
           </td>
         </tr>
         <tr>
           <th>가입날짜</th>
           <td>
-            <input type="date" v-model="userInfo.join_date">
+            <input type="date" class="form-control" v-model="userInfo.join_date">
           </td>
         </tr>
       </table>
@@ -73,9 +73,9 @@ export default {
     }
   },
   created() {
-    // 화면이 그려지는 시점에 데이터가 필요함! -> created()에 사용
+    // 화면이 그려지는 시점에 원데이터가 필요함! -> created()에 사용
     // 라우터로 넘어온 쿼리의 userId값으로 ajax실행하기
-    let searchNo = this.$route.query.userId;
+    let searchNo = this.$route.query.userId; // $route == request
     this.getUserInfoes(searchNo);
   },
   methods: {
@@ -87,12 +87,29 @@ export default {
                               .catch(err => console.log(err));
       // console.log(result)
       let info = result.data;
+      // ★가입날짜 format 덮어쓰기
+      let newDate = this.dateFormat(info.join_date);
+      info.join_date = newDate;
       this.userInfo = info;
+    },
+    dateFormat(value) {
+      let result = null;
+
+      if(value != null) {
+        let date = new Date(value);
+        let year = date.getFullYear();
+        let month = ('0' + (date.getMonth() + 1)).slice(-2);
+        let day = ('0' + date.getDate()).slice(-2);
+
+        result = `${year}-${month}-${day}`;
+      } 
+      return result;
     },
     // '저장 클릭 시' 회원정보 수정
     updateInfo() {
       // console.log(this.userInfo); // 콘솔로 넘어가는 정보 확인
-      // 1.유효성 체크가 필요할까? 이미 정보가 있으니까 필요 없지 않을까 싶으면서도 정보누락 방지를 위해서 필요할 것 같기도...?
+      // 1.유효성 체크가 필요할까? 공백 처리가 따로 들어가거나 유효성 체크를 해주는 것이 좋음
+      if(!this.validation()) return;
       
       // 2. ajax 실행
       // 2-1. 데이터 선별
@@ -100,23 +117,36 @@ export default {
       console.log(data)
       // 2-2. axios를 통해 ajax 실행
       // PUT http://localhost:4000/users/user02
-      axios.put(`/api/users/${data.param.user_id}`, data)
+      axios.put(`/api/users/${this.userInfo.user_id}`, data)
            .then(result => {
             console.log(result)
             // 3.결과 처리
-            if(result.data.changedRows == 0) {
+            let count = result.data.changedRows; // changedRows->수정에서 사용됨
+            if(count == 0) {
               alert(`수정되지 않았습니다.\n메세지를 확인해주세요.${result.data.message}`);
             } else {
               alert('정상적으로 수정되었습니다. :)');
+              this.$router.push({ path : '/userInfo', query : { "userId" : this.userInfo.user_id } }); // 다시 단건조회로 이동
             }
            })
            .catch(err => console.log(err));
-      
+      },
+      validation() {
+        if(this.userInfo.user_pwd == "") {
+          alert('비밀번호를 입력하세요.');
+          return false;
+        }
+
+        if(this.userInfo.user_name == "") {
+          alert('이름을 입력하세요.');
+          return false;
+        }
+        return true;
 
       },
       newSendData() {
         let obj = this.userInfo;
-        let delData = ["user_no", "join_date"]; // 가입날짜 입력시 오류나서 제외시킴
+        let delData = ["user_no", "user_id"]; // 가입날짜 입력시 오류나서 제외시킴
         let newObj = {};
         let isTargeted = null;
 

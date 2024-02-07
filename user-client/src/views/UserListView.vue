@@ -40,6 +40,8 @@ export default {
     count() { // 새로운 prop여서 변수명을 새롭게 해야함 (return O)
       return this.userList.length;
     }
+    // 성별
+    
   },
   watch: { // 프로세스, 이미 존재하는 prop의 변경을 감시
     userList(newQuestion, oldQuestion) { // 변수명이 같아야 함 (return X)

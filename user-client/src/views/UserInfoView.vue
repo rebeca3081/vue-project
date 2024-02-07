@@ -94,12 +94,24 @@ export default {
     },
     goToUpdate(userId) { 
       // 수정폼 컨포넌트 호출
-      // console.log(userId);
-      this.$router.push({ path: '/userUpdate', query: {"userId" : userId}});
+      // this.$router.push({ path: '/userUpdate', query: { userId }}); 
+      this.$router.push({ path: '/userForm', query: { "id" :userId }}); 
+      // query: { userId } : 변수명 == 필드명, 변수가 가지고 있는 값이 필드의 값
     },
     deleteInfo(userId) { 
-      //서버에 해당 데이터를 삭제
-      console.log(userId);
+      // 서버에 해당 데이터를 삭제
+      // http://localhost:4000/users/user05
+      let newPath = `/api/users/${userId}`;
+      axios.delete(newPath)
+            .then(result => {
+              if(result.data.affectedRows != 0 && result.data.changedRows == 0) {
+                alert('삭제 완료되었습니다.');
+                this.$router.push({ path: '/' }); // 다시 전체목록으로 돌아가기 or 페이지를 새로 그려주기
+              } else {
+                alert(`삭제 실패...\n메세지를 확인하세요. ${result.data.message}`);
+              }
+            })
+            .catch(err => console.log(err));
     }
   }
 }

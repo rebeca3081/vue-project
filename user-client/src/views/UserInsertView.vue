@@ -7,25 +7,25 @@
         <tr>
           <th>No.</th>
           <td>
-            <input type="number" v-model="userInfo.user_no" readonly>
+            <input type="number" class="form-control" v-model="userInfo.user_no" readonly>
           </td>
         </tr>
         <tr>
           <th>아이디</th>
           <td>
-            <input type="text" v-model="userInfo.user_id">
+            <input type="text" class="form-control" v-model="userInfo.user_id">
           </td>
         </tr>
         <tr>
           <th>비밀번호</th>
           <td>
-            <input type="password" v-model="userInfo.user_pwd">
+            <input type="password" class="form-control" v-model="userInfo.user_pwd">
           </td>
         </tr>
         <tr>
           <th>이름</th>
           <td>
-            <input type="text" v-model="userInfo.user_name">
+            <input type="text" class="form-control" v-model="userInfo.user_name">
           </td>
         </tr>
         <tr>
@@ -39,13 +39,13 @@
         <tr>
           <th>나이</th>
           <td>
-            <input type="number" v-model="userInfo.user_age" min="0" max="150">
+            <input type="number" class="form-control" v-model="userInfo.user_age" min="0" max="150">
           </td>
         </tr>
         <tr>
           <th>가입날짜</th>
           <td>
-            <input type="date" v-model="userInfo.join_date">
+            <input type="date" class="form-control" v-model="userInfo.join_date">
             <!-- yyyy-MM-dd -->
           </td>
         </tr>
@@ -76,7 +76,18 @@ export default {
       }
     }
   },
+  created() { // 초기값을 그려줘야하니까 created hook 사용
+    this.userInfo.join_date = this.getToday();
+  },
   methods: {
+    getToday() { // 오늘날짜 셋팅
+      let today = new Date();
+      let year = today.getFullYear();
+      let month = ('0' + (today.getMonth() + 1)).slice(-2);
+      let day = ('0' + today.getDate()).slice(-2);
+
+      return `${year}-${month}-${day}`;
+    },
     insertInfo() {
       // 1) 유효성 체크
       if(!this.validation()) return;
@@ -92,7 +103,7 @@ export default {
       // 3) 결과처리
       .then(result => {
         // console.log(result);
-        let user_no = result.data.insertId;
+        let user_no = result.data.insertId; // auto-increament에서만 작동
         if(user_no == 0) {
           alert(`등록되지 않았습니다.\n메세지를 확인해주세요.${result.data.message}`);
         } else {

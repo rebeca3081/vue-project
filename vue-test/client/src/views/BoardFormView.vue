@@ -63,9 +63,9 @@ export default {
   },
   created() {
     this.searchNo = this.$route.query.no;
-    console.log(this.searchNo);
+    // console.log(this.searchNo);
     if(this.searchNo != null && this.searchNo != undefined) {
-      this.getBoardInfo(); // 단건조회 실행
+      this.getBoardInfo(this.searchNo); // 단건조회 실행
     } else {
       this.boardInfo.created_date = this.getDate('');
     }
@@ -129,7 +129,7 @@ export default {
         // 수정
       } else {
         method = 'put';
-        url = `/api/board${no}`;
+        url = `/api/board/${no}`;
         data = {
           "param" : {
             no: this.boardInfo.no,

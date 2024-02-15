@@ -105,6 +105,7 @@ export default {
             let info = result.data.changedRows;
             if(info > 0) {
                 alert('수정되었습니다.');
+                this.$router.push({path : '/boardList'}); // 전체조회로 돌아가기
             }
         }
     }

@@ -17,6 +17,7 @@
           <td>{{ board.title }}</td>
           <td>{{ board.writer }}</td>
           <td>{{ board.created_date }}</td>
+          <!-- 날짜 변경하기 -->
         </tr>
       </tbody>
     </table>
@@ -49,3 +50,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+    table *{
+        text-align: center;
+    }
+</style>
